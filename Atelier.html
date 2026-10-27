@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Atelier Suite</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef1f6;--surf:#fff;--ink:#14213d;--mut:#5b6785;--line:#d6dce8;--acc:#0e8f80;--accink:#fff;--warn:#c27c0e;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1626;--surf:#18223a;--ink:#e8ecf6;--mut:#9aa6c4;--line:#2b3757;--acc:#35c4b2;--accink:#06231f;--warn:#f0b44c;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0f1626;--surf:#18223a;--ink:#e8ecf6;--mut:#9aa6c4;--line:#2b3757;--acc:#35c4b2;--accink:#06231f;--warn:#f0b44c;color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Bricolage Grotesque',system-ui,-apple-system,'Segoe UI',sans-serif;line-height:1.5}
+.app{display:grid;grid-template-columns:230px 1fr;min-height:100vh}
+aside{background:var(--ink);color:#e8ecf6;padding:20px 12px;position:sticky;top:0;height:100vh;overflow:auto}
+aside h1{font-size:20px;font-weight:800;margin:0 8px 18px}
+aside small{display:block;font-weight:400;font-size:12px;opacity:.7}
+nav button{display:block;width:100%;text-align:left;background:none;border:0;color:inherit;font:inherit;padding:9px 10px;border-radius:8px;cursor:pointer}
+nav button small{display:inline;opacity:.65;margin-left:6px}
+nav button:hover{background:rgba(255,255,255,.08)}
+nav button[aria-current=true]{background:var(--acc);color:var(--accink);font-weight:600}
+main{padding:28px;max-width:1000px;width:100%}
+h2{font-size:28px;font-weight:800;margin:0 0 4px}
+.sub{color:var(--mut);margin:0 0 22px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
+.tile{background:var(--surf);border:1px solid var(--line);border-radius:10px;padding:14px;text-align:left;font:inherit;color:inherit;cursor:pointer}
+.tile:hover{border-color:var(--acc)}
+.tile b{display:block;font-size:26px;font-weight:800}
+.tile span{color:var(--mut);font-size:14px}
+.panel{background:var(--surf);border:1px solid var(--line);border-radius:10px;padding:16px;margin-top:16px}
+.panel h3{margin:0 0 10px;font-size:17px}
+.bar{display:grid;grid-template-columns:90px 1fr 110px;gap:10px;align-items:center;margin:8px 0;font-size:14px}
+.bar i{display:block;height:12px;background:var(--acc);border-radius:3px;min-width:2px}
+.form{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+input,select{font:inherit;color:var(--ink);background:var(--surf);border:1px solid var(--line);border-radius:8px;padding:8px 10px;min-width:0;flex:1 1 140px}
+button.add{font:inherit;font-weight:600;background:var(--acc);color:var(--accink);border:0;border-radius:8px;padding:8px 16px;cursor:pointer}
+:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:15px}
+th,td{text-align:left;padding:8px 8px;border-bottom:1px solid var(--line);white-space:nowrap}
+th{color:var(--mut);font-weight:600;font-size:13px}
+td select{flex:none;padding:4px 6px}
+.del{background:none;border:0;color:var(--warn);cursor:pointer;font:inherit}
+.empty{color:var(--mut);padding:18px 0}
+.tot{margin-top:10px;font-weight:600}
+@media (max-width:760px){.app{grid-template-columns:1fr}aside{position:static;height:auto;padding:12px}aside h1{margin-bottom:8px}nav{display:flex;overflow-x:auto;gap:4px}nav button{width:auto;white-space:nowrap}main{padding:18px}}
+.app.auth{grid-template-columns:1fr}.app.auth aside{display:none}.app.auth main{max-width:none;padding:0}
+.authwrap{display:grid;grid-template-columns:1fr 1fr;min-height:100vh}
+.pitch{background:var(--ink);color:#e8ecf6;padding:48px;display:flex;flex-direction:column;justify-content:center}
+.pitch h1{font-size:40px;font-weight:800;margin:0 0 12px}.pitch p{font-size:18px;max-width:42ch;margin:0 0 12px}.pitch ul{padding-left:18px;opacity:.85}
+.card{padding:48px;display:flex;flex-direction:column;justify-content:center;max-width:460px;width:100%;margin:0 auto}
+.tabs{display:flex;gap:6px;margin-bottom:18px}.tabs button{flex:1;font:inherit;background:var(--surf);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:9px;cursor:pointer}.tabs button[aria-current=true]{background:var(--acc);color:var(--accink);border-color:var(--acc);font-weight:600}
+form#af{display:flex;flex-direction:column;gap:10px}form#af label{font-size:14px;color:var(--mut)}form#af input{flex:none;width:100%}
+.amsg{min-height:20px;font-size:14px;margin:4px 0}.amsg.bad{color:var(--warn)}.amsg.ok{color:var(--acc)}
+.hint{font-size:13px;color:var(--mut);margin-top:14px}
+.me{margin-top:18px;padding:12px 8px 0;border-top:1px solid rgba(255,255,255,.15);font-size:14px}.me span{display:block;opacity:.65;word-break:break-all}.me button{margin-top:8px;font:inherit;background:none;border:1px solid rgba(255,255,255,.35);color:inherit;border-radius:8px;padding:6px 10px;cursor:pointer}
+@media (max-width:760px){.authwrap{grid-template-columns:1fr}.pitch,.card{padding:28px 20px}.pitch h1{font-size:30px}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside><h1>Atelier Suite<small>Tous vos outils au même endroit</small></h1><nav id="nav"></nav><div id="user"></div></aside>
+<main id="main"></main>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script>
+var M={
+crm:{n:'Clients',k:'CRM',f:[['nom','Nom','text'],['email','E‑mail','text'],['statut','Statut',['Prospect','Client','Perdu']],['valeur','Valeur (FCFA)','number']],sum:'valeur',lab:'FCFA de valeur'},
+projets:{n:'Projets',k:'Tâches',f:[['titre','Tâche','text'],['resp','Responsable','text'],['echeance','Échéance','date'],['statut','Statut',['À faire','En cours','Terminé']]],open:['À faire','En cours'],lab:'à terminer'},
+factures:{n:'Facturation',k:'Factures',f:[['client','Client','text'],['montant','Montant (FCFA)','number'],['statut','Statut',['Brouillon','Envoyée','Payée']]],sum:'montant',lab:'FCFA facturés'},
+marketing:{n:'Marketing',k:'Campagnes',f:[['nom','Campagne','text'],['canal','Canal',['E‑mail','SMS','WhatsApp','Réseaux sociaux']],['statut','Statut',['Brouillon','Planifiée','Envoyée']]],open:['Brouillon','Planifiée'],lab:'à lancer'},
+support:{n:'Support',k:'Tickets',f:[['sujet','Sujet','text'],['client','Client','text'],['statut','Statut',['Ouvert','En cours','Résolu']]],open:['Ouvert','En cours'],lab:'à traiter'},
+rh:{n:'Équipe',k:'RH',f:[['nom','Nom','text'],['poste','Poste','text'],['statut','Statut',['Actif','En congé']]],lab:'membres'},
+boutique:{n:'Boutique',k:'Stock',f:[['produit','Produit','text'],['prix','Prix (FCFA)','number'],['stock','Stock','number']],sum:'prix',lab:'FCFA de catalogue'}
+};
+var SB_URL='https://pitjolrfodfbxojkhvre.supabase.co',SB_KEY='COLLE_ICI_TA_CLE_ANON';
+var sb=null,U=null,D={};
+try{if(window.supabase&&SB_KEY.indexOf('COLLE')<0)sb=window.supabase.createClient(SB_URL,SB_KEY)}catch(e){sb=null}
+function lg(k){try{return localStorage.getItem(k)}catch(e){return null}}
+function ls(k,v){try{localStorage.setItem(k,v)}catch(e){}}
+function ld(k){try{localStorage.removeItem(k)}catch(e){}}
+function dkey(){return 'atelier-suite:'+(U&&U.email)}
+function loadD(){try{D=JSON.parse(lg(dkey())||'{}')}catch(e){D={}}}
+function save(){ls(dkey(),JSON.stringify(D))}
+function sha(s){return crypto.subtle.digest('SHA-256',new TextEncoder().encode(s)).then(function(b){return Array.from(new Uint8Array(b)).map(function(x){return x.toString(16).padStart(2,'0')}).join('')})}
+function accounts(){try{return JSON.parse(lg('atelier-accounts')||'{}')}catch(e){return{}}}
+function doSignup(nom,em,pw){
+ if(sb)return sb.auth.signUp({email:em,password:pw,options:{data:{nom:nom}}}).then(function(r){
+  if(r.error)throw new Error('Inscription impossible : '+r.error.message);
+  if(r.data&&r.data.session)return{user:{email:em,nom:nom}};
+  return{info:'Compte créé. Vérifiez votre boîte mail pour confirmer votre adresse, puis connectez‑vous.'}});
+ return sha(pw).then(function(h){var a=accounts();
+  if(a[em])throw new Error('Un compte existe déjà avec cet e‑mail. Connectez‑vous.');
+  a[em]={nom:nom,h:h};ls('atelier-accounts',JSON.stringify(a));ls('atelier-session',em);return{user:{email:em,nom:nom}}})}
+function doLogin(em,pw){
+ if(sb)return sb.auth.signInWithPassword({email:em,password:pw}).then(function(r){
+  if(r.error||!r.data||!r.data.user)throw new Error('E‑mail ou mot de passe incorrect.');
+  var u=r.data.user;return{user:{email:u.email,nom:(u.user_metadata||{}).nom||u.email}}});
+ return sha(pw).then(function(h){var a=accounts();
+  if(!a[em]||a[em].h!==h)throw new Error('E‑mail ou mot de passe incorrect.');
+  ls('atelier-session',em);return{user:{email:em,nom:a[em].nom}}})}
+function logout(){
+ var p=sb?sb.auth.signOut().catch(function(){}):Promise.resolve(ld('atelier-session'));
+ p.then(function(){U=null;D={};document.getElementById('user').innerHTML='';authView('login')})}
+function authView(mode){
+ document.querySelector('.app').classList.add('auth');
+ var su=mode==='signup';
+ document.getElementById('main').innerHTML='<div class="authwrap"><section class="pitch"><h1>Atelier Suite</h1><p>Clients, projets, factures, campagnes, support, équipe et stock : un seul outil au lieu de sept.</p><ul><li>Un tableau de bord qui réunit tous vos chiffres</li><li>2 000 FCFA par mois, réglés par mobile money</li><li>Vos données sont rattachées à votre compte</li></ul></section>'+
+ '<section class="card"><div class="tabs"><button type="button" data-mode="login" aria-current="'+!su+'">Connexion</button><button type="button" data-mode="signup" aria-current="'+su+'">Inscription</button></div>'+
+ '<form id="af" data-mode="'+mode+'" novalidate><h2>'+(su?'Créer votre compte':'Se connecter')+'</h2>'+
+ (su?'<label for="nom">Nom</label><input id="nom" name="nom" type="text" autocomplete="name">':'')+
+ '<label for="email">Adresse e‑mail</label><input id="email" name="email" type="email" autocomplete="email">'+
+ '<label for="pw">Mot de passe</label><input id="pw" name="pw" type="password" autocomplete="'+(su?'new-password':'current-password')+'">'+
+ (su?'<label for="pw2">Confirmer le mot de passe</label><input id="pw2" name="pw2" type="password" autocomplete="new-password">':'')+
+ '<p class="amsg" id="amsg" role="status" aria-live="polite"></p><button class="add" type="submit">'+(su?'Créer mon compte':'Se connecter')+'</button></form>'+
+ (sb?'':'<p class="hint">Mode démonstration : les comptes restent dans ce navigateur. Ajoutez votre clé Supabase pour activer les vrais comptes.</p>')+'</section></div>';
+ var f=document.getElementById(su?'nom':'email');if(f)f.focus()}
+function renderUser(){document.getElementById('user').innerHTML='<div class="me"><b>'+esc(U.nom)+'</b><span>'+esc(U.email)+'</span><button type="button" data-out="1">Se déconnecter</button></div>'}
+function enter(u){U=u;loadD();document.querySelector('.app').classList.remove('auth');renderUser();go((location.hash||'').slice(1)||'dash')}
+function boot(){
+ if(sb){sb.auth.getSession().then(function(r){var s=r.data&&r.data.session;
+  if(s)enter({email:s.user.email,nom:(s.user.user_metadata||{}).nom||s.user.email});else authView('login')}).catch(function(){authView('login')});return}
+ var e=lg('atelier-session'),a=accounts();
+ if(e&&a[e])enter({email:e,nom:a[e].nom});else authView('login')}
+document.addEventListener('click',function(e){var t=e.target.closest('[data-mode],[data-out]');if(!t)return;
+ if(t.dataset.mode)return authView(t.dataset.mode);
+ if(t.dataset.out)logout()});
+document.addEventListener('submit',function(e){var f=e.target;if(f.id!=='af')return;e.preventDefault();
+ var su=f.dataset.mode==='signup',em=f.elements.email.value.trim().toLowerCase(),pw=f.elements.pw.value,
+  msg=document.getElementById('amsg'),btn=f.querySelector('button.add');
+ function err(t){msg.textContent=t;msg.className='amsg bad'}
+ if(!/^\S+@\S+\.\S+$/.test(em))return err('Entrez une adresse e‑mail valide.');
+ if(pw.length<8)return err('Le mot de passe doit contenir au moins 8 caractères.');
+ var nom='';
+ if(su){nom=f.elements.nom.value.trim();if(!nom)return err('Entrez votre nom.');if(pw!==f.elements.pw2.value)return err('Les deux mots de passe ne correspondent pas.')}
+ btn.disabled=true;msg.textContent='';
+ (su?doSignup(nom,em,pw):doLogin(em,pw)).then(function(r){
+  if(r.user)enter(r.user);else if(r.info){msg.textContent=r.info;msg.className='amsg ok'}
+ }).catch(function(x){err(x.message||'Une erreur est survenue. Réessayez.')}).then(function(){btn.disabled=false})});
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function fmt(n){return Number(n||0).toLocaleString('fr-FR')}
+function rows(k){return D[k]||(D[k]=[])}
+function metric(k){var m=M[k],r=rows(k);
+ if(m.sum)return fmt(r.reduce(function(a,x){return a+(+x[m.sum]||0)},0));
+ if(m.open)return r.filter(function(x){return m.open.indexOf(x.statut)>-1}).length;
+ return r.length}
+function nav(cur){var h='<button data-go="dash" aria-current="'+(cur==='dash')+'">Tableau de bord</button>';
+ Object.keys(M).forEach(function(k){h+='<button data-go="'+k+'" aria-current="'+(cur===k)+'">'+M[k].n+'<small>'+M[k].k+'</small></button>'});
+ document.getElementById('nav').innerHTML=h}
+function dash(){
+ var h='<h2>Tableau de bord</h2><p class="sub">Clients, projets, factures, campagnes, support, équipe et stock : tout est réuni ici.</p><div class="tiles">';
+ Object.keys(M).forEach(function(k){h+='<button class="tile" data-go="'+k+'"><b>'+metric(k)+'</b><span>'+M[k].n+' · '+M[k].lab+'</span></button>'});
+ h+='</div>';
+ var st=['Payée','Envoyée','Brouillon'],t={},mx=1;
+ st.forEach(function(s){t[s]=rows('factures').filter(function(x){return x.statut===s}).reduce(function(a,x){return a+(+x.montant||0)},0);mx=Math.max(mx,t[s])});
+ h+='<div class="panel"><h3>Factures par statut</h3>';
+ st.forEach(function(s){h+='<div class="bar"><span>'+s+'</span><i style="width:'+Math.round(t[s]/mx*100)+'%"></i><span>'+fmt(t[s])+' FCFA</span></div>'});
+ h+='</div>';
+ document.getElementById('main').innerHTML=h}
+function mod(k){var m=M[k],r=rows(k);
+ var h='<h2>'+m.n+'</h2><p class="sub">'+m.k+' : ajoutez, modifiez le statut et supprimez vos lignes.</p><div class="form" id="form">';
+ m.f.forEach(function(f){
+  if(Array.isArray(f[2]))h+='<select data-f="'+f[0]+'" aria-label="'+f[1]+'">'+f[2].map(function(o){return'<option>'+esc(o)+'</option>'}).join('')+'</select>';
+  else h+='<input data-f="'+f[0]+'" type="'+f[2]+'" placeholder="'+f[1]+'" aria-label="'+f[1]+'">'});
+ h+='<button class="add" data-add="'+k+'">Ajouter</button></div>';
+ if(!r.length)h+='<p class="empty">Rien ici pour l’instant. Remplissez les champs ci‑dessus puis cliquez sur Ajouter.</p>';
+ else{h+='<div class="wrap"><table><thead><tr>'+m.f.map(function(f){return'<th>'+f[1]+'</th>'}).join('')+'<th></th></tr></thead><tbody>';
+  r.forEach(function(x,i){h+='<tr>'+m.f.map(function(f){
+   if(Array.isArray(f[2]))return'<td><select data-k="'+k+'" data-i="'+i+'" data-f="'+f[0]+'">'+f[2].map(function(o){return'<option'+(x[f[0]]===o?' selected':'')+'>'+esc(o)+'</option>'}).join('')+'</select></td>';
+   return'<td>'+(f[2]==='number'?fmt(x[f[0]]):esc(x[f[0]]))+'</td>'}).join('')+'<td><button class="del" data-del="'+k+'" data-i="'+i+'">Supprimer</button></td></tr>'});
+  h+='</tbody></table></div>';
+  if(m.sum)h+='<p class="tot">Total : '+metric(k)+' FCFA</p>'}
+ document.getElementById('main').innerHTML=h}
+function go(k){if(!M[k])k='dash';nav(k);if(k==='dash')dash();else mod(k);try{history.replaceState(null,'','#'+k)}catch(e){}}
+document.addEventListener('click',function(e){var t=e.target.closest('[data-go],[data-add],[data-del]');if(!t)return;
+ if(t.dataset.go)return go(t.dataset.go);
+ if(t.dataset.add){var k=t.dataset.add,o={},ok=false;
+  document.querySelectorAll('#form [data-f]').forEach(function(el){o[el.dataset.f]=el.value;if(el.type==='text'&&el.value.trim())ok=true});
+  if(!ok){var fi=document.querySelector('#form input');if(fi)fi.focus();return}
+  rows(k).push(o);save();return go(k)}
+ if(t.dataset.del){rows(t.dataset.del).splice(+t.dataset.i,1);save();go(t.dataset.del)}});
+document.addEventListener('change',function(e){var s=e.target;if(s.dataset&&s.dataset.k){rows(s.dataset.k)[+s.dataset.i][s.dataset.f]=s.value;save();go(s.dataset.k)}});
+boot();
+</script>
+</body>
+</html>
